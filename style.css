@@ -1,0 +1,156 @@
+/* Define CSS variables in :root for global access */
+:root {
+  --theme-color: #11694f;
+  --footer-color: #666;
+}
+
+/* Reset some default styles */
+body,
+h1,
+h2,
+form,
+ul,
+li {
+  margin: 0;
+  padding: 0;
+}
+
+/* Basic styling for the body */
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  background-color: #f4f4f4;
+  padding: 20px;
+}
+
+/* Header styles */
+header {
+  background: var(--theme-color);
+  color: #fff;
+  padding: 10px 0;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+}
+
+/* Section content styles */
+section#content {
+  background: #fff;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Article (List) styles */
+article {
+  margin-bottom: 20px;
+}
+
+article:last-child {
+  margin-bottom: 0;
+}
+
+/* List title styles */
+article h2 {
+  border-bottom: 2px solid var(--theme-color);
+  padding-bottom: 5px;
+  margin-bottom: 20px;
+  color: var(--theme-color);
+}
+
+/* Form input and button styles */
+form {
+  margin-bottom: 20px;
+}
+
+form input[type="text"] {
+  padding: 10px;
+  width: calc(100% - 122px);
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+form input[type="submit"] {
+  padding: 10px 20px;
+  background: var(--theme-color);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+form input[type="submit"]:hover {
+  background: #555;
+}
+
+/* List styles */
+
+ul {
+  list-style: none;
+}
+
+ul li {
+  position: relative;
+  padding: 10px;
+  background: #f4f4f4;
+  border: 1px solid #ddd;
+  margin-bottom: 5px;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.delete-btn {
+  display: block;
+}
+
+.delete-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: red; /* Make the button red */
+  font-weight: bold;
+  font-size: 24px;
+  display: none; /* Hide by default */
+  cursor: pointer; /* Make it look clickable */
+}
+
+ul li:hover .delete-btn {
+  display: block;
+}
+
+/* Footer styles */
+
+footer {
+  display: flex; /* Use flexbox layout */
+  justify-content: center; /* Center children horizontally */
+  align-items: center; /* Center children vertically */
+  padding: 10px 0;
+  margin-top: 20px;
+  font-size: 0.8em;
+  background-color: #666;
+}
+
+footer a {
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+footer img {
+  height: 20px;
+  margin-right: 5px;
+}
+
+button {
+  padding: 10px 20px;
+  color: var(--theme-color);
+  background-color: rgba(255, 255, 0, 0.384);
+  border: 1px solid var(--theme-color);
+  border-radius: 4px;
+  cursor: pointer;
+}
