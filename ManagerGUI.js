@@ -59,6 +59,7 @@ function initializeList(listName) {
   const listElement = document.querySelector(`#${listName}-list`);
   listElement.innerHTML = ""; // Clear current list
   Object.entries(itemsObj).forEach(([itemId, itemText]) => {
+    console.log(`Adding item to list: ${listName}, Item ID: ${itemId}, Text: ${itemText}`);
     addListItem(listElement, itemText, itemId);
   });
   makeListDraggable(listName);
@@ -129,17 +130,19 @@ function finalizeDrop(listElement, draggedItem) {
   const sourceListName = draggedItem.parentNode.id.split("-")[0];
   const placeholder = document.querySelector(".drop-placeholder");
   const newPosition = findNewPosition(listElement, placeholder);
-  console.log('finalizeDrop called');
-  console.log('targetListName:', targetListName);
-  console.log('sourceListName:', sourceListName);
-  console.log('draggedItemId:', draggedItem.id);
-  console.log('newPosition:', newPosition);
-  console.log('Before moveItem call:', sourceListName, targetListName, draggedItem.id, newPosition);
-  managerList.moveItem(sourceListName, targetListName, draggedItem.id);
-  console.log('After moveItem call:', sourceListName, targetListName, draggedItem.id, newPosition);
+  managerList.moveItem(sourceListName, targetListName, draggedItem.id, newPosition);
   draggedItem.classList.remove("dragging");
   if (placeholder) {
     placeholder.remove();
+  }
+  
+  // Redraw  list to reflect  new order
+  if (sourceListName === targetListName) {
+    initializeList(targetListName);
+  } else {
+    // If items were moved between lists, reinitialize both
+    initializeList(sourceListName);
+    initializeList(targetListName);
   }
 }
 

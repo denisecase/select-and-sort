@@ -50,6 +50,7 @@ class ManagerList {
       console.log(`Item before moving: ${itemId} - ${sourceItems[itemId]}`);
 
       if (sourceListName === targetListName) {
+        console.log('Moving within the same list');
         const reorderedItems = {};
         let index = 0;
 
@@ -68,18 +69,20 @@ class ManagerList {
         }
 
         targetItems = reorderedItems; 
+        console.log('Reordered items:', reorderedItems);
+        this.updateStorage(sourceListName, reorderedItems); 
+
+
       } else {
         // Handle moving to different list 
-        targetItems = this.getItemsFromStorage(targetListName);
-        targetItems[itemId] = sourceItems[itemId];
-        delete sourceItems[itemId];
+               targetItems = this.getItemsFromStorage(targetListName);
+               targetItems[itemId] = sourceItems[itemId];
+               delete sourceItems[itemId];
+               this.updateStorage(sourceListName, sourceItems);
+               this.updateStorage(targetListName, targetItems);
+      
       }
 
-      // Update storage
-      this.updateStorage(sourceListName, sourceItems);
-      if (sourceListName !== targetListName) {
-        this.updateStorage(targetListName, targetItems);
-      }
 
       // Log updated lists
       console.log(`Moved item ID: ${itemId} from ${sourceListName} to ${targetListName}`);
