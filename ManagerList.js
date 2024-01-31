@@ -42,27 +42,58 @@ class ManagerList {
     }
   }
 
-  moveItem(sourceListName, targetListName, itemId) {
+  moveItem(sourceListName, targetListName, itemId, newPosition) {
     let sourceItems = this.getItemsFromStorage(sourceListName);
-    let targetItems = this.getItemsFromStorage(targetListName);
+    let targetItems = sourceItems; // By default, targetItems references sourceItems
 
     if (sourceItems[itemId]) {
-      targetItems[itemId] = sourceItems[itemId];
-      delete sourceItems[itemId];
+      console.log(`Item before moving: ${itemId} - ${sourceItems[itemId]}`);
 
+      if (sourceListName === targetListName) {
+        const reorderedItems = {};
+        let index = 0;
+
+        for (let key in sourceItems) {
+          if (index === newPosition) {
+            reorderedItems[itemId] = sourceItems[itemId];
+          }
+          if (key !== itemId) {
+            reorderedItems[key] = sourceItems[key];
+            index++;
+          }
+        }
+
+        if (newPosition >= index) {
+          reorderedItems[itemId] = sourceItems[itemId];
+        }
+
+        targetItems = reorderedItems; 
+      } else {
+        // Handle moving to different list 
+        targetItems = this.getItemsFromStorage(targetListName);
+        targetItems[itemId] = sourceItems[itemId];
+        delete sourceItems[itemId];
+      }
+
+      // Update storage
       this.updateStorage(sourceListName, sourceItems);
       if (sourceListName !== targetListName) {
         this.updateStorage(targetListName, targetItems);
       }
+
+      // Log updated lists
       console.log(`Moved item ID: ${itemId} from ${sourceListName} to ${targetListName}`);
+      console.log(`Source items after move:`, sourceItems);
+      console.log(`Target items after move:`, targetItems);
     } else {
       console.error(`Item not found in ${sourceListName}. ID:`, itemId);
     }
   }
 
   updateStorage(listName, items) {
+    console.log(`Before updating local storage for ${listName}:`, JSON.stringify(items));
     localStorage.setItem(`${listName}-items`, JSON.stringify(items));
-    console.log(`Updated ${listName} in storage:`, items);
+    console.log(`After updating local storage for ${listName}:`, localStorage.getItem(`${listName}-items`));
   }
 
   clearList(listName) {

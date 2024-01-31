@@ -66,7 +66,7 @@ function initializeList(listName) {
 
 function addListItem(listElement, itemText, itemId) {
   const itemElement = document.createElement("li");
-  itemElement.id = itemId || managerList.getNextItemId(); 
+  itemElement.id = itemId || managerList.getNextItemId();
   itemElement.draggable = true;
   itemElement.innerHTML = `${itemText} <span class="delete-btn">X</span>`;
   listElement.appendChild(itemElement);
@@ -98,20 +98,21 @@ function handleDragEnd(e) {
   e.target.classList.remove("dragging");
   const existingPlaceholder = document.querySelector(".drop-placeholder");
   if (existingPlaceholder) {
-    existingPlaceholder.remove(); 
+    existingPlaceholder.remove();
   }
 }
 
 function handleDragOver(e) {
+  console.log("handleDragOver called");
   e.preventDefault();
   e.dataTransfer.dropEffect = "move";
-
   const listElement = e.currentTarget;
   const afterElement = getDragAfterElement(listElement, e.clientY);
-  updateDropPlaceholder(listElement, afterElement); 
+  updateDropPlaceholder(listElement, afterElement);
 }
 
 function handleDrop(e) {
+  console.log("handleDrop called");
   e.preventDefault();
   const listElement = e.currentTarget;
   const draggedElementId = e.dataTransfer.getData("text/plain");
@@ -128,7 +129,14 @@ function finalizeDrop(listElement, draggedItem) {
   const sourceListName = draggedItem.parentNode.id.split("-")[0];
   const placeholder = document.querySelector(".drop-placeholder");
   const newPosition = findNewPosition(listElement, placeholder);
+  console.log('finalizeDrop called');
+  console.log('targetListName:', targetListName);
+  console.log('sourceListName:', sourceListName);
+  console.log('draggedItemId:', draggedItem.id);
+  console.log('newPosition:', newPosition);
+  console.log('Before moveItem call:', sourceListName, targetListName, draggedItem.id, newPosition);
   managerList.moveItem(sourceListName, targetListName, draggedItem.id);
+  console.log('After moveItem call:', sourceListName, targetListName, draggedItem.id, newPosition);
   draggedItem.classList.remove("dragging");
   if (placeholder) {
     placeholder.remove();
@@ -160,10 +168,10 @@ function findNewPosition(listElement, placeholder) {
 
   if (placeholderIndex === -1) {
     console.warn("Placeholder not found within the list children.");
-    return draggableItems.length; 
+    return draggableItems.length;
   }
 
-  return placeholderIndex; 
+  return placeholderIndex;
 }
 
 // Helper function to determine the position to insert the dragged item
