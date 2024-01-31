@@ -118,6 +118,11 @@ ul li {
   cursor: pointer; /* Make it look clickable */
 }
 
+ul.draggable.droppable {
+  min-height: 20px; 
+}
+
+
 ul li:hover .delete-btn {
   display: block;
 }

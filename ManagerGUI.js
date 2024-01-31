@@ -104,13 +104,20 @@ function handleDragEnd(e) {
 }
 
 function handleDragOver(e) {
-  console.log("handleDragOver called");
   e.preventDefault();
   e.dataTransfer.dropEffect = "move";
   const listElement = e.currentTarget;
-  const afterElement = getDragAfterElement(listElement, e.clientY);
-  updateDropPlaceholder(listElement, afterElement);
+
+  // Detect if the list is empty
+  if (listElement.children.length === 0) {
+    const placeholder = createDropPlaceholder();
+    listElement.appendChild(placeholder);
+  } else {
+    const afterElement = getDragAfterElement(listElement, e.clientY);
+    updateDropPlaceholder(listElement, afterElement);
+  }
 }
+
 
 function handleDrop(e) {
   console.log("handleDrop called");
@@ -158,22 +165,10 @@ function findNewPosition(listElement, placeholder) {
   const items = Array.from(listElement.children); // Get all children, including `li` and placeholder `div`
   const draggableItems = items.filter((item) => item.matches("li:not(.dragging)")); // Filter only draggable items
   const placeholderIndex = items.indexOf(placeholder); // Find index of placeholder among all children
-
-  console.log(
-    "Draggable items in list:",
-    draggableItems.map((item) => item.textContent.trim())
-  );
-  console.log(
-    "All children in list:",
-    items.map((item) => item.outerHTML)
-  );
-  console.log("Placeholder index among all children:", placeholderIndex);
-
   if (placeholderIndex === -1) {
     console.warn("Placeholder not found within the list children.");
     return draggableItems.length;
   }
-
   return placeholderIndex;
 }
 
@@ -223,6 +218,7 @@ function updateDropPlaceholder(listElement, afterElement) {
   if (afterElement) {
     listElement.insertBefore(placeholder, afterElement);
   } else {
+    // in case the list is empty when this is called
     listElement.appendChild(placeholder);
   }
 }
