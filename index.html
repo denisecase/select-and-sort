@@ -61,7 +61,13 @@
 				<input id="selected-entry" type="text" />
 				<input id="selected-submit" type="submit" value="Add to Selected" class="button-2">
 			</form>
-			<button id="selected-clear" class="button-2">Clear All Selected</button>
+			<div class="controls-wrapper">
+				<div class="checkbox-container">
+					<input type="checkbox" id="option-checkbox" class="checkbox-style">
+					<label for="option-checkbox">Keep in Selected List when moving to Options</label>
+				</div>
+				<button id="selected-clear" class="button-2">Clear All Selected</button>
+			</div>
 		</article>
 
 		<article id="option-article">
@@ -73,19 +79,25 @@
 				<input id="option-entry" type="text" />
 				<input id="option-submit" type="submit" value="Add to Options" class="button-2">
 			</form>
-			<button id="option-clear" class="button-2">Clear All Options</button>
+			<div class="controls-wrapper">
+				<div class="checkbox-container">
+					<input type="checkbox" id="selected-checkbox" class="checkbox-style">
+					<label for="selected-checkbox">Keep in Options when moving to Selected List</label>
+				</div>
+				<button id="option-clear" class="button-2">Clear All Options</button>
+			</div>
 		</article>
 
 	</section>
 
-		<footer>
-			<a href="https://github.com/denisecase/select-and-sort" target="_blank">
-				<img src="./github-mark/github-mark-white.svg" alt="GitHub Logo">
-			</a>
-		</footer>
+	<footer>
+		<a href="https://github.com/denisecase/select-and-sort" target="_blank">
+			<img src="./github-mark/github-mark-white.svg" alt="GitHub Logo">
+		</a>
+	</footer>
 
-		<script src="ManagerList.js"></script>
-		<script src="ManagerGUI.js"></script>
+	<script src="ManagerList.js"></script>
+	<script src="ManagerGUI.js"></script>
 </body>
 
 </html>

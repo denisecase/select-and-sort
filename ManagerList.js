@@ -31,6 +31,18 @@ class ManagerList {
     return itemId; // Return the ID of the newly added item
   }
 
+  editItemInList(listName, itemId, newText) {
+    let items = this.getItemsFromStorage(listName);
+    if (items[itemId]) {
+      console.log(`Editing item in ${listName}. ID: ${itemId} Old Text: ${items[itemId]}`);
+      items[itemId] = newText;
+      this.updateStorage(listName, items);
+      console.log(`Updated item in ${listName}. ID: ${itemId} New Text: ${items[itemId]}`);
+    } else {
+      console.error(`Item not found in ${listName}. ID:`, itemId);
+    }
+  }
+
   removeItemFromList(listName, itemId) {
     let items = this.getItemsFromStorage(listName);
     if (items[itemId]) {
@@ -44,7 +56,7 @@ class ManagerList {
 
   moveItem(sourceListName, targetListName, itemId, newPosition) {
     let sourceItems = this.getItemsFromStorage(sourceListName);
-    let targetItems = sourceItems; // By default, targetItems references sourceItems
+    let targetItems = this.getItemsFromStorage(targetListName);
 
     if (sourceItems[itemId]) {
       console.log(`Item before moving: ${itemId} - ${sourceItems[itemId]}`);
@@ -73,9 +85,10 @@ class ManagerList {
         this.updateStorage(sourceListName, reorderedItems);
       } else {
         // Handle moving to different list
-        targetItems = this.getItemsFromStorage(targetListName);
         targetItems[itemId] = sourceItems[itemId];
-        delete sourceItems[itemId];
+        if (!document.querySelector(`#${sourceListName}-checkbox`).checked) {
+          delete sourceItems[itemId]; // delete if not checked
+        }
         this.updateStorage(sourceListName, sourceItems);
         this.updateStorage(targetListName, targetItems);
       }

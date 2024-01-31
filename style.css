@@ -165,3 +165,34 @@ button {
   border-radius: 4px;
   cursor: pointer;
 }
+
+/* Controls wrapper styles */
+.controls-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Checkbox container styles */
+.checkbox-container {
+  display: flex;
+  align-items: center;
+}
+
+/* Checkbox styles */
+.checkbox-style {
+  margin-right: 5px; /* Space between checkbox and label */
+  cursor: pointer;
+}
+
+/* Styles for the text next to checkbox */
+.checkbox-style + label {
+  cursor: pointer;
+}
+
+/* Button adjustments */
+.button-2 {
+  padding: 10px 15px; /* Adjust as per design */
+}
+

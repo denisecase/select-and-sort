@@ -4,7 +4,7 @@ const managerList = new ManagerList();
 // managerList.clearAllLocalStorage();
 
 document.addEventListener("DOMContentLoaded", function () {
-  initializeLists();
+  initialize();
   attachEventListeners();
 });
 
@@ -13,6 +13,7 @@ function attachEventListeners() {
   attachFormEventListeners();
   attachItemEventListeners();
   attachButtonEventListeners();
+  attachCheckboxEventListeners();
 }
 
 function attachListEventListeners() {
@@ -34,11 +35,29 @@ function attachItemEventListeners() {
       handleItemDelete(e);
     }
   });
+
+  // Event delegation for double-click on list items
+  document.querySelectorAll(".draggable").forEach((list) => {
+    list.addEventListener("dblclick", (e) => {
+      if (e.target.tagName === "LI") {
+        handleItemEdit(e);
+      }
+    });
+  });
 }
 
 function attachButtonEventListeners() {
   document.querySelector("#selected-clear").addEventListener("click", () => clearAll("selected"));
   document.querySelector("#option-clear").addEventListener("click", () => clearAll("option"));
+}
+
+function attachCheckboxEventListeners() {
+  const checkboxes = document.querySelectorAll("[type='checkbox']");
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener("change", function () {
+      localStorage.setItem(this.id, this.checked); // Store checkbox state in local storage
+    });
+  });
 }
 
 function clearAll(listName) {
@@ -47,11 +66,12 @@ function clearAll(listName) {
   localStorage.removeItem(`${listName}-items`);
 }
 
-function initializeLists() {
+function initialize() {
   const lists = ["selected", "option"];
   lists.forEach((listName) => {
     initializeList(listName);
   });
+  initializeCheckboxes();
 }
 
 function initializeList(listName) {
@@ -63,6 +83,51 @@ function initializeList(listName) {
     addListItem(listElement, itemText, itemId);
   });
   makeListDraggable(listName);
+}
+
+function initializeCheckboxes() {
+  const checkboxes = document.querySelectorAll("[type='checkbox']");
+  checkboxes.forEach((checkbox) => {
+    const storedState = localStorage.getItem(checkbox.id); // Get state from local storage
+    if (storedState) {
+      checkbox.checked = storedState === "true"; // Set state based on stored value
+    }
+  });
+}
+
+function handleItemEdit(e) {
+  const listItem = e.target;
+  const currentText = listItem.textContent.replace(" X", ""); // Remove the delete button text
+  const input = document.createElement("input");
+  input.type = "text";
+  input.value = currentText;
+  input.addEventListener("blur", (e) => finishEditing(listItem, input.value));
+  input.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      finishEditing(listItem, input.value);
+    }
+  });
+
+  listItem.innerHTML = "";
+  listItem.appendChild(input);
+  input.focus();
+}
+
+function finishEditing(listItem, newText) {
+  const listId = listItem.parentNode.id;
+  const listName = listId.split("-")[0];
+  // Remove whitespace from the start and end.
+  newText = newText.trim();
+  if (newText === "") {
+    // If new text is empty or whitespace, delete item
+    managerList.removeItemFromList(listName, listItem.id);
+    listItem.remove();
+    console.log(`Removed empty item from ${listName}. ID: ${listItem.id}`);
+  } else {
+    managerList.editItemInList(listName, listItem.id, newText);
+    listItem.innerHTML = `${newText} <span class="delete-btn">X</span>`;
+    attachItemEventListeners(); // Reattach listeners to newly added elements
+  }
 }
 
 function addListItem(listElement, itemText, itemId) {
@@ -118,7 +183,6 @@ function handleDragOver(e) {
   }
 }
 
-
 function handleDrop(e) {
   console.log("handleDrop called");
   e.preventDefault();
@@ -142,7 +206,7 @@ function finalizeDrop(listElement, draggedItem) {
   if (placeholder) {
     placeholder.remove();
   }
-  
+
   // Redraw  list to reflect  new order
   if (sourceListName === targetListName) {
     initializeList(targetListName);
@@ -151,6 +215,7 @@ function finalizeDrop(listElement, draggedItem) {
     initializeList(sourceListName);
     initializeList(targetListName);
   }
+  attachItemEventListeners();
 }
 
 function handleItemDelete(e) {
