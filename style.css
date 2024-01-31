@@ -122,6 +122,12 @@ ul li:hover .delete-btn {
   display: block;
 }
 
+.drop-placeholder {
+  height: 5px; /* Adjustable based on preference */
+  background-color: var(--theme-color);
+  margin: 5px 0; /* Space above and below the line */
+}
+
 /* Footer styles */
 
 footer {
