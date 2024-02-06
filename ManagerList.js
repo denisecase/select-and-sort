@@ -2,17 +2,20 @@
 
 class ManagerList {
   constructor() {
-    this.lastItemId = parseInt(localStorage.getItem("last-item-id")) || 0;
-  }
+    this.STORAGE_PREFIX = 'sns-';
+    this.lastItemIdKey = `${this.STORAGE_PREFIX}last-item-id`;
+    this.lastItemId = parseInt(localStorage.getItem(this.lastItemIdKey)) || 0;
+ }
 
   getItemsFromStorage(listName) {
-    const items = JSON.parse(localStorage.getItem(`${listName}-items`)) || {};
+    const itemsKey = `${this.STORAGE_PREFIX}${listName}-items`;
+    const items = JSON.parse(localStorage.getItem(itemsKey)) || {};
     return items;
   }
 
   getNextItemId() {
     this.lastItemId += 1;
-    localStorage.setItem("last-item-id", this.lastItemId.toString());
+    localStorage.setItem(this.lastItemIdKey, this.lastItemId.toString());
     return `item-${this.lastItemId}`;
   }
 
@@ -83,11 +86,13 @@ class ManagerList {
   }
 
   updateStorage(listName, items) {
-    localStorage.setItem(`${listName}-items`, JSON.stringify(items));
+    const itemsKey = `${this.STORAGE_PREFIX}${listName}-items`;
+    localStorage.setItem(itemsKey, JSON.stringify(items));
   }
 
   clearList(listName) {
-    localStorage.removeItem(`${listName}-items`);
+    const itemsKey = `${this.STORAGE_PREFIX}${listName}-items`;
+    localStorage.removeItem(itemsKey);
   }
 
   clearAllLocalStorage() {
