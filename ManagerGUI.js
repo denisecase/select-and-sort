@@ -36,13 +36,21 @@ function attachItemEventListeners() {
     }
   });
 
-  // Event delegation for double-click on list items
   document.querySelectorAll(".draggable").forEach((list) => {
     list.addEventListener("dblclick", (e) => {
       if (e.target.tagName === "LI") {
         handleItemEdit(e);
       }
     });
+  });
+
+  document.addEventListener("keyup", (e) => {
+    if (e.key === "Escape") {
+      if (e.target.tagName === "INPUT") {
+        const listItem = e.target.closest("li");
+        revertEditing(listItem);
+      }
+    }
   });
 }
 
@@ -96,8 +104,15 @@ function initializeCheckboxes() {
 }
 
 function handleItemEdit(e) {
+  e.stopPropagation();
   const listItem = e.target;
+  // If already an input (don't nest inputs)
+  if (listItem.tagName.toLowerCase() === "input") {
+    return;
+  }
   const currentText = listItem.textContent.replace(" X", ""); // Remove the delete button text
+  console.log('Current text:', currentText);
+
   const input = document.createElement("input");
   input.type = "text";
   input.value = currentText;
@@ -110,24 +125,23 @@ function handleItemEdit(e) {
 
   listItem.innerHTML = "";
   listItem.appendChild(input);
-  input.focus();
+    // Delay focusing the input slightly
+    setTimeout(() => input.focus(), 0);
 }
 
 function finishEditing(listItem, newText) {
   const listId = listItem.parentNode.id;
   const listName = listId.split("-")[0];
-  // Remove whitespace from the start and end.
   newText = newText.trim();
   if (newText === "") {
-    // If new text is empty or whitespace, delete item
     managerList.removeItemFromList(listName, listItem.id);
     listItem.remove();
-    console.log(`Removed empty item from ${listName}. ID: ${listItem.id}`);
   } else {
     managerList.editItemInList(listName, listItem.id, newText);
     listItem.innerHTML = `${newText} <span class="delete-btn">X</span>`;
     attachItemEventListeners(); // Reattach listeners to newly added elements
   }
+  location.reload();
 }
 
 function addListItem(listElement, itemText, itemId) {
@@ -216,6 +230,8 @@ function finalizeDrop(listElement, draggedItem) {
     initializeList(targetListName);
   }
   attachItemEventListeners();
+  location.reload();
+
 }
 
 function handleItemDelete(e) {
@@ -224,6 +240,8 @@ function handleItemDelete(e) {
   const listName = listId.split("-")[0];
   managerList.removeItemFromList(listName, listItem.id);
   listItem.remove();
+  location.reload();
+
 }
 
 function findNewPosition(listElement, placeholder) {
