@@ -88,7 +88,6 @@ function initializeList(listName) {
   const listElement = document.querySelector(`#${listName}-list`);
   listElement.innerHTML = ""; // Clear current list
   Object.entries(itemsObj).forEach(([itemId, itemText]) => {
-    console.log(`Adding item to list: ${listName}, Item ID: ${itemId}, Text: ${itemText}`);
     addListItem(listElement, itemText, itemId);
   });
   makeListDraggable(listName);
@@ -112,8 +111,6 @@ function handleItemEdit(e) {
     return;
   }
   const currentText = listItem.textContent.replace(" X", ""); // Remove the delete button text
-  console.log('Current text:', currentText);
-
   const input = document.createElement("input");
   input.type = "text";
   input.value = currentText;
@@ -126,8 +123,8 @@ function handleItemEdit(e) {
 
   listItem.innerHTML = "";
   listItem.appendChild(input);
-    // Delay focusing the input slightly
-    setTimeout(() => input.focus(), 0);
+  // Delay focusing the input slightly
+  setTimeout(() => input.focus(), 0);
 }
 
 function finishEditing(listItem, newText) {
@@ -168,8 +165,6 @@ function handleFormSubmit(e, listName) {
 function handleDragStart(e) {
   const itemId = e.target.id;
   const itemText = e.target.textContent.trim(); // Extract text content of item
-  console.log(`Dragging item with ID: ${itemId} and Text: ${itemText}`);
-
   e.dataTransfer.setData("text/plain", e.target.id);
   e.dataTransfer.effectAllowed = "move";
   e.target.classList.add("dragging");
@@ -199,7 +194,6 @@ function handleDragOver(e) {
 }
 
 function handleDrop(e) {
-  console.log("handleDrop called");
   e.preventDefault();
   const listElement = e.currentTarget;
   const draggedElementId = e.dataTransfer.getData("text/plain");
@@ -242,7 +236,6 @@ function handleItemDelete(e) {
   managerList.removeItemFromList(listName, listItem.id);
   listItem.remove();
   location.reload();
-
 }
 
 function findNewPosition(listElement, placeholder) {
@@ -321,13 +314,13 @@ function sortList(listId, isAscending) {
   const items = Array.from(list.querySelectorAll("li"));
 
   items.sort((a, b) => {
-      const textA = a.textContent.trim();
-      const textB = b.textContent.trim();
-      return isAscending ? textA.localeCompare(textB) : textB.localeCompare(textA);
+    const textA = a.textContent.trim();
+    const textB = b.textContent.trim();
+    return isAscending ? textA.localeCompare(textB) : textB.localeCompare(textA);
   });
 
   list.innerHTML = "";
-  items.forEach(item => list.appendChild(item));
+  items.forEach((item) => list.appendChild(item));
 }
 
 function removeDuplicates(listId) {
@@ -335,7 +328,7 @@ function removeDuplicates(listId) {
   const items = Array.from(list.querySelectorAll("li"));
   const seen = new Set(); // To track seen text content
 
-  items.forEach(item => {
+  items.forEach((item) => {
     const textContent = item.textContent.trim();
     if (seen.has(textContent)) {
       item.remove();

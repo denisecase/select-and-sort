@@ -119,9 +119,8 @@ ul li {
 }
 
 ul.draggable.droppable {
-  min-height: 20px; 
+  min-height: 20px;
 }
-
 
 ul li:hover .delete-btn {
   display: block;
@@ -193,7 +192,7 @@ button {
 
 /* Button adjustments */
 .button-2 {
-  padding: 10px 15px; 
+  padding: 10px 15px;
 }
 
 .sort-button {
@@ -203,10 +202,9 @@ button {
   font-size: inherit;
   padding: 0;
   margin-left: 10px;
-  transition: color 0.3s ease; 
-
+  transition: color 0.3s ease;
 }
 
 .sort-button:hover {
-  color: #007bff; 
+  color: #007bff;
 }
