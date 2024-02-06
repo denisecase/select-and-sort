@@ -14,6 +14,7 @@ function attachEventListeners() {
   attachItemEventListeners();
   attachButtonEventListeners();
   attachCheckboxEventListeners();
+  attachSortEventListeners();
 }
 
 function attachListEventListeners() {
@@ -220,18 +221,18 @@ function finalizeDrop(listElement, draggedItem) {
   if (placeholder) {
     placeholder.remove();
   }
+  redrawListsIfNeeded(sourceListName, targetListName);
+  location.reload();
+}
 
-  // Redraw  list to reflect  new order
+function redrawListsIfNeeded(sourceListName, targetListName) {
   if (sourceListName === targetListName) {
     initializeList(targetListName);
   } else {
-    // If items were moved between lists, reinitialize both
     initializeList(sourceListName);
     initializeList(targetListName);
   }
   attachItemEventListeners();
-  location.reload();
-
 }
 
 function handleItemDelete(e) {
@@ -304,4 +305,42 @@ function updateDropPlaceholder(listElement, afterElement) {
     // in case the list is empty when this is called
     listElement.appendChild(placeholder);
   }
+}
+
+function attachSortEventListeners() {
+  document.querySelector("#selected-ascending").addEventListener("click", () => sortList("selected", true));
+  document.querySelector("#selected-descending").addEventListener("click", () => sortList("selected", false));
+  document.querySelector("#selected-no-duplicates").addEventListener("click", () => removeDuplicates("selected"));
+  document.querySelector("#option-ascending").addEventListener("click", () => sortList("option", true));
+  document.querySelector("#option-descending").addEventListener("click", () => sortList("option", false));
+  document.querySelector("#option-no-duplicates").addEventListener("click", () => removeDuplicates("option"));
+}
+
+function sortList(listId, isAscending) {
+  const list = document.querySelector(`#${listId}-list`);
+  const items = Array.from(list.querySelectorAll("li"));
+
+  items.sort((a, b) => {
+      const textA = a.textContent.trim();
+      const textB = b.textContent.trim();
+      return isAscending ? textA.localeCompare(textB) : textB.localeCompare(textA);
+  });
+
+  list.innerHTML = "";
+  items.forEach(item => list.appendChild(item));
+}
+
+function removeDuplicates(listId) {
+  const list = document.querySelector(`#${listId}-list`);
+  const items = Array.from(list.querySelectorAll("li"));
+  const seen = new Set(); // To track seen text content
+
+  items.forEach(item => {
+    const textContent = item.textContent.trim();
+    if (seen.has(textContent)) {
+      item.remove();
+    } else {
+      seen.add(textContent);
+    }
+  });
 }
